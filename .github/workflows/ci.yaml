@@ -5,7 +5,7 @@ on:
   pull_request:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -144,6 +144,9 @@ jobs:
       - name: Run coverage and integration tests
         run: pnpm --filter backend test:coverage
 
+      - name: Generate coverage badge
+        run: node scripts/generate-coverage-badge.mjs
+
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
@@ -151,6 +154,43 @@ jobs:
           name: coverage-report
           path: backend/coverage
           if-no-files-found: ignore
+
+      - name: Publish coverage badge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: |
+          mkdir badge-publish
+          cd badge-publish
+
+          git init
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git remote add origin \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+          if git fetch origin badges; then
+            git checkout -B badges FETCH_HEAD
+          else
+            git checkout --orphan badges
+            git rm -rf . || true
+          fi
+
+          mkdir -p badges
+          cp ../badges/coverage.svg badges/coverage.svg
+
+          git add badges/coverage.svg
+
+          if git diff --cached --quiet; then
+            echo "Coverage badge has not changed."
+            exit 0
+          fi
+
+          git commit -m "chore: update coverage badge for ${GITHUB_SHA}"
+          git push origin HEAD:badges
 
       - name: Capture failure logs
         if: failure()
