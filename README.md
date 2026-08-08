@@ -1,5 +1,7 @@
 # Real-Time Event Pipeline
 
+[![CI](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml)
+
 A production-style, self-hosted event pipeline demonstrating reliable event delivery, real-time analytics, and operational recovery patterns.
 
 ```text
@@ -478,6 +480,26 @@ docker compose ps
 # Reset all local infrastructure data (destructive)
 docker compose down -v
 ```
+
+## Testing and CI
+
+The project includes unit and end-to-end tests for the full event pipeline.
+
+```bash
+# Run unit tests
+pnpm test
+
+# Start infrastructure and backend in separate terminals
+pnpm infra:up
+pnpm dev:backend
+
+# Run the MongoDB → outbox → Kafka → ClickHouse integration suite
+pnpm test:integration
+```
+
+GitHub Actions runs the same backend type-check, production build, unit tests, and end-to-end pipeline tests on every push and pull request.
+
+The CI workflow starts a clean Docker environment, initializes the MongoDB replica set, creates the `user-events` Kafka topic, starts ClickHouse, launches the compiled backend, and verifies event delivery through the analytics pipeline.
 
 ## Roadmap
 
