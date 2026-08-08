@@ -1,6 +1,6 @@
 # Real-Time Event Pipeline
 
-[![CI](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml)
+[![CI](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml)
 
 A production-style, self-hosted event pipeline demonstrating reliable event delivery, real-time analytics, and operational recovery patterns.
 
