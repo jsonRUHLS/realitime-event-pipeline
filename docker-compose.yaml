@@ -36,6 +36,16 @@ services:
       KAFKA_NUM_PARTITIONS: 3
     volumes:
       - kafka_data:/var/lib/kafka/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics --bootstrap-server localhost:9092 --list >/dev/null"
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
     networks:
       - pipeline
 
@@ -89,7 +99,8 @@ services:
       - clickhouse_data:/var/lib/clickhouse
       - ./clickhouse-init:/docker-entrypoint-initdb.d
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     healthcheck:
       test:
         [
