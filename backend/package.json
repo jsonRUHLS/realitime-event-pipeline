@@ -10,6 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:unit": "vitest run tests/unit",
+    "test:coverage:unit": "vitest run tests/unit --coverage",
+    "test:coverage": "vitest run --coverage --no-file-parallelism",
     "test:integration": "vitest run tests/integration --no-file-parallelism",
     "test:watch": "vitest"
   },
@@ -26,6 +28,7 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^26.1.2",
+    "@vitest/coverage-v8": "^4.1.10",
     "tsx": "^4.23.8",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"

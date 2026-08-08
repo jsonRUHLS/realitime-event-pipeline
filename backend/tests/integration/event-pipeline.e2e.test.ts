@@ -3,6 +3,8 @@ import { createClient } from "@clickhouse/client";
 import { Collection, Document, MongoClient, WithId } from "mongodb";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { waitFor } from "../helpers/wait-for.js";
+import { Server } from "node:http";
+import { startRuntime, stopRuntime } from "../../src/runtime.js";
 
 type AcceptedEvent = {
   status: "accepted";
@@ -45,11 +47,12 @@ type AnalyticsEvent = {
   properties: string;
 };
 
-const apiBaseUrl = process.env.API_BASE_URL ?? "http://127.0.0.1:3001";
+let apiBaseUrl: string;
+let runtimeServer: Server | undefined;
 
 const mongoUri =
   process.env.MONGODB_URI ??
-  "mongodb://admin:password@localhost:27017/events?authSource=admin&replicaSet=rs0";
+  "mongodb://admin:password@localhost:27017/events?authSource=admin&replicaSet=rs0&directConnection=true";
 
 const mongoDatabase = process.env.MONGODB_DATABASE ?? "events";
 const mongoCollection = process.env.MONGODB_COLLECTION ?? "raw_events";
@@ -79,34 +82,34 @@ let clickhouse: ReturnType<typeof createClient>;
 let acceptedEvent: AcceptedEvent;
 
 beforeAll(async () => {
+  runtimeServer = await startRuntime(0);
+
+  const address = runtimeServer.address();
+
+  if (!address || typeof address === "string") {
+    throw new Error("Unable to determine integration-test server address");
+  }
+
+  apiBaseUrl = `http://127.0.0.1:${address.port}`;
+
   mongoClient = new MongoClient(mongoUri);
   await mongoClient.connect();
 
   const database = mongoClient.db(mongoDatabase);
 
   eventsCollection = database.collection<RawEvent>(mongoCollection);
-  outboxCollection = database.collection<OutboxEvent>("event_outbox");
+  outboxCollection =
+    database.collection<OutboxEvent>("event_outbox");
 
   clickhouse = createClient({
     url: clickhouseUrl,
     username: clickhouseUser,
     password: clickhousePassword,
   });
-
-  await waitFor(
-    async () => {
-      const response = await fetch(`${apiBaseUrl}/api/health`);
-
-      return response.ok;
-    },
-    Boolean,
-    {
-      description: "the backend health endpoint",
-    },
-  );
 });
 
 afterAll(async () => {
+  await stopRuntime(runtimeServer);
   await mongoClient.close();
   await clickhouse.close();
 });

@@ -30,3 +30,5 @@ yarn-error.log*
 
 # Local only docs
 README_LOCAL.md
+
+coverage/

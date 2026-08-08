@@ -1,33 +1,22 @@
-import { app } from "./server.js";
+import type { Server } from "node:http";
 import { config } from "./utils/config.js";
-import { connectKafka, closeKafka } from "./utils/kafka.js";
-import { connectMongo, closeMongo } from "./utils/mongodb.js";
-import { startOutboxRelay, stopOutboxRelay } from "./utils/outbox.js";
+import { startRuntime, stopRuntime } from "./runtime.js";
 
-let httpServer: ReturnType<typeof app.listen>;
+let httpServer: Server | undefined;
 
 async function start() {
-  await connectMongo();
-  await connectKafka();
-  startOutboxRelay();
+  httpServer = await startRuntime(config.PORT);
 
-  httpServer = app.listen(config.PORT, () => {
-    console.log(`Backend listening on http://localhost:${config.PORT}`);
-    console.log(`Health check: http://localhost:${config.PORT}/api/health`);
-    console.log(`Event endpoint: http://localhost:${config.PORT}/api/track`);
-  });
+  console.log(`Backend listening on http://localhost:${config.PORT}`);
+  console.log(`Health check: http://localhost:${config.PORT}/api/health`);
+  console.log(`Event endpoint: http://localhost:${config.PORT}/api/track`);
 }
 
 async function shutdown(signal: string) {
   console.log(`${signal} received. Shutting down...`);
 
-  await stopOutboxRelay();
-
-  httpServer?.close(async () => {
-    await closeKafka();
-    await closeMongo();
-    process.exit(0);
-  });
+  await stopRuntime(httpServer);
+  process.exit(0);
 }
 
 process.on("SIGINT", () => {
