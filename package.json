@@ -11,10 +11,16 @@
     "infra:up": "docker compose up -d",
     "infra:down": "docker compose down",
     "infra:logs": "docker compose logs -f",
-    "status": "pnpm list --depth -1 -r"
+    "status": "pnpm list --depth -1 -r",
+    "test": "pnpm -r --if-present test:unit",
+    "test:backend": "pnpm --filter backend test:unit",
+    "test:integration": "pnpm --filter backend test:integration"
   },
   "engines": {
     "node": ">=22.12.0"
   },
-  "packageManager": "pnpm@11.20.0"
+  "packageManager": "pnpm@11.20.0",
+  "devDependencies": {
+    "@types/node": "^26.2.0"
+  }
 }
