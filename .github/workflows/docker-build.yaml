@@ -1,0 +1,38 @@
+name: Docker Compose Build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docker/**"
+      - "docker-compose.yaml"
+      - ".github/workflows/docker-build.yaml"
+  pull_request:
+    paths:
+      - "docker/**"
+      - "docker-compose.yaml"
+      - ".github/workflows/docker-build.yaml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build MongoDB image
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Validate Docker Compose
+        run: docker compose config -q
+
+      - name: Build MongoDB image
+        run: docker compose build --pull mongodb
+
+      - name: Verify image exists
+        run: docker image inspect pipeline-mongodb:dev

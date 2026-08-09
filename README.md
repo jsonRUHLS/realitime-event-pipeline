@@ -1,8 +1,8 @@
 # Real-Time Event Pipeline
 
-[![CI](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml)
+[![CI](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml/badge.svg?branch=main&event=push)](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml) [![Coverage](https://raw.githubusercontent.com/jsonRUHLS/realitime-event-pipeline/badges/badges/coverage.svg)](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml) [![Docker Compose Build](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/docker-build.yaml/badge.svg?branch=main&event=push)](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/docker-build.yaml)
 
-[![Coverage](https://raw.githubusercontent.com/jsonRUHLS/realitime-event-pipeline/badges/badges/coverage.svg)](https://github.com/jsonRUHLS/realitime-event-pipeline/actions/workflows/ci.yaml)
+Real-time event pipeline using React, Node.js, Kafka, ClickHouse, MongoDB, and Grafana.
 
 A production-style, self-hosted event pipeline demonstrating reliable event delivery, real-time analytics, and operational recovery patterns.
 
