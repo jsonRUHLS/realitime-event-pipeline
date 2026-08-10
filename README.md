@@ -8,6 +8,8 @@ Real-time event pipeline using React, Node.js, Kafka, ClickHouse, MongoDB, and G
 
 A production-style, self-hosted event pipeline demonstrating reliable event delivery, real-time analytics, and operational recovery patterns.
 
+For implementation history and notable project changes, see the [CHANGELOG](CHANGELOG.md).
+
 ```text
 React frontend
     ↓
@@ -64,19 +66,26 @@ Grafana analytics dashboard
 
 ```text
 realitime-event-pipeline/
-├── backend/                    # Express API, outbox relay, MongoDB/Kafka clients
+├── .github/
+│   └── workflows/               # CI and Docker build workflows
+├── backend/                     # Express API, outbox relay, MongoDB/Kafka clients
 │   ├── .env.example
 │   ├── src/
-│   │   ├── routes/             # Event, outbox-status, and admin routes
-│   │   └── utils/              # Config, schema, MongoDB, Kafka, outbox modules
+│   │   ├── routes/              # Event, outbox-status, and admin routes
+│   │   └── utils/               # Config, schema, MongoDB, Kafka, outbox modules
 │   └── package.json
-├── frontend/                   # React + Vite event-tracking client
-├── clickhouse-init/            # ClickHouse schema and Kafka-engine definitions
+├── frontend/                    # React + Vite event-tracking client
+├── clickhouse-init/             # ClickHouse schema and Kafka-engine definitions
 ├── docker/
-│   └── mongodb/                # Local MongoDB replica-set image and keyfile location
-├── screenshots/                # Project screenshots and dashboard images
-├── docker-compose.yml          # Local services and initialization jobs
-├── package.json                # pnpm workspace scripts
+│   └── mongodb/                 # Local MongoDB replica-set image and keyfile location
+├── docs/                        # Architecture, runbooks, testing, roadmap, event contract
+├── screenshots/                 # Project screenshots and dashboard images
+├── scripts/                     # Developer and CI utility scripts
+├── CHANGELOG.md                 # Chronological project change history
+├── README.md                    # Project overview and setup guide
+├── README_LOCAL.md              # Machine-specific local setup notes
+├── docker-compose.yaml          # Local services and initialization jobs
+├── package.json                 # pnpm workspace scripts
 └── pnpm-workspace.yaml
 ```
 
@@ -713,6 +722,20 @@ docker compose ps
 # Reset all local infrastructure data (destructive)
 docker compose down -v
 ```
+
+## Documentation
+
+| Document | Purpose |
+|---|---|
+| [README.md](README.md) | Project overview, architecture, setup, API usage, and operational workflows |
+| [CHANGELOG.md](CHANGELOG.md) | Chronological record of features, infrastructure changes, reliability improvements, and documentation updates |
+| [Local Setup Notes](README_LOCAL.md) | Machine-specific local configuration and setup notes |
+| [Architecture](docs/architecture.md) | System components, event flow, and major design decisions |
+| [Event Contract](docs/event-contract.md) | Event payload schema, validation rules, and event semantics |
+| [Local Development](docs/local-development.md) | Docker, Node.js, pnpm, and local environment setup |
+| [Operations Runbook](docs/operations-runbook.md) | Pipeline checks, logs, recovery procedures, and operational commands |
+| [Testing](docs/testing.md) | Unit, integration, and end-to-end testing workflow |
+| [Roadmap](docs/roadmap.md) | Planned reliability, analytics, dashboard, and ML work |
 
 ## Testing and CI
 
